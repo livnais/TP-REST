@@ -1,6 +1,6 @@
 import express from "express";
-import Hotel from "./Class/hotel";
-import { isBookableHotel, initData } from "./Utils/utils";
+import Hotel from "./class/hotel";
+import { isBookableHotel, initData } from "./utils/utils";
 import moment from "moment";
 const app = express();
 const PORT = process.env.PORT || 8080;

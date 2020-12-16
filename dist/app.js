@@ -4,12 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const utils_1 = require("./Utils/utils");
+const utils_1 = require("./utils/utils");
 const moment_1 = __importDefault(require("moment"));
 const app = express_1.default();
 const PORT = process.env.PORT || 8080;
 let hotels = Array();
 moment_1.default.locale("fr");
+app.use(express_1.default.json());
 app.get("/v1/booking", (req, res) => {
     const { city } = req.query;
     //@ts-ignore
