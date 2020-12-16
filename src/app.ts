@@ -10,16 +10,10 @@ moment.locale("fr");
 app.get("/v1/booking", (req, res) => {
   const { city } = req.query;
   //@ts-ignore
-  const startDate: string = req.query;
+  const startDate: string = req.query.startDate;
   //@ts-ignore
-  const endDate: string = req.query;
-  console.log(
-    moment(startDate).isValid(),
-    moment(endDate).isValid(),
-    moment(moment(startDate)).isBefore(moment(endDate), "day"),
-    startDate,
-    endDate
-  );
+  const endDate: string = req.query.endDate;
+
   if (
     city &&
     startDate &&
@@ -39,6 +33,5 @@ app.get("/v1/booking", (req, res) => {
 
 app.listen(PORT, () => {
   hotels = initData();
-  // console.log(hotels);
   return console.log(`server is listening on ${PORT}`);
 });

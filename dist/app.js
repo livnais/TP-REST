@@ -13,16 +13,14 @@ moment_1.default.locale("fr");
 app.get("/v1/booking", (req, res) => {
     const { city } = req.query;
     //@ts-ignore
-    const startDate = req.query;
+    const startDate = req.query.startDate;
     //@ts-ignore
-    const endDate = req.query;
-    console.log(moment_1.default(startDate).isValid(), moment_1.default(endDate).isValid(), moment_1.default(moment_1.default(startDate)).isBefore(moment_1.default(endDate), "day"), startDate, endDate);
+    const endDate = req.query.endDate;
     if (city &&
         startDate &&
         endDate &&
         moment_1.default(startDate).isValid() &&
-        moment_1.default(endDate).isValid() &&
-        moment_1.default(startDate).isBefore(endDate, "day")) {
+        moment_1.default(endDate).isValid()) {
         utils_1.isBookableHotel(city, startDate, endDate, hotels)
             .then((result) => res.send(result))
             .catch((error) => {
@@ -35,7 +33,6 @@ app.get("/v1/booking", (req, res) => {
 });
 app.listen(PORT, () => {
     hotels = utils_1.initData();
-    // console.log(hotels);
     return console.log(`server is listening on ${PORT}`);
 });
 //# sourceMappingURL=app.js.map

@@ -27,14 +27,16 @@ exports.initData = () => {
 const formatDate = (date) => moment_1.default(date).startOf("day");
 const isFreeRoom = (startDate, endDate, itemsMonth) => {
     for (let i = 0; i < itemsMonth.length; i++) {
-        if (formatDate(startDate).isBetween(formatDate(itemsMonth[i].debut), formatDate(itemsMonth[i].fin), undefined, "[]") ||
-            formatDate(endDate).isBetween(formatDate(itemsMonth[i].debut), formatDate(itemsMonth[i].fin), undefined, "[]")) {
+        if (formatDate(startDate).isBetween(formatDate(itemsMonth[i].debut), formatDate(itemsMonth[i].fin), "day", "[]") ||
+            formatDate(endDate).isBetween(formatDate(itemsMonth[i].debut), formatDate(itemsMonth[i].fin), "day", "[]") ||
+            formatDate(itemsMonth[i].debut).isBetween(formatDate(startDate), formatDate(endDate), "day", "[]") ||
+            formatDate(itemsMonth[i].fin).isBetween(formatDate(startDate), formatDate(endDate), "day", "[]")) {
             return false;
         }
     }
     return true;
 };
-exports.isBookableChambre = (startDate, endDate, listChambre) => {
+exports.isBookableChambre = (startDate, endDate, listChambre, city) => {
     return new Promise((successCallback, failureCallback) => {
         for (let i = 0; i < listChambre.length; i++) {
             const chambre = listChambre[i];
@@ -45,7 +47,12 @@ exports.isBookableChambre = (startDate, endDate, listChambre) => {
                 chambre.addSejour(sejour);
                 successCallback({
                     code: "success",
-                    result: { id: uid, chambreId: chambre.id, sejour },
+                    result: {
+                        sejourUid: uid,
+                        ville: city,
+                        chambreUid: chambre.id,
+                        sejour,
+                    },
                 });
                 break;
             }
@@ -57,9 +64,9 @@ exports.isBookableHotel = (city, startDate, endDate, listHotel) => {
     return new Promise((success, failed) => {
         const hotelIndex = listHotel.findIndex((hotel) => hotel.city === city);
         if (hotelIndex > -1) {
-            exports.isBookableChambre(startDate, endDate, listHotel[hotelIndex].chambres)
+            exports.isBookableChambre(startDate, endDate, listHotel[hotelIndex].chambres, city)
                 .then((result) => {
-                success({ result });
+                success(result);
             })
                 .catch((error) => {
                 failed(error);
