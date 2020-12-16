@@ -4,25 +4,39 @@ import moment from "moment";
 import DateSejour from "../Class/dateSejour";
 import { v4 as uuidv4 } from "uuid";
 
+const CHAMBRENUMBER = 20;
+const CHAMBRENUMBER2 = 50;
 export const initData = () => {
   const hotels = Array<Hotel>();
 
-  let chambre1 = new Chambre();
-  let chambre2 = new Chambre();
+  const listChambreParis = [];
+  for (let i = 0; i < CHAMBRENUMBER; i++) {
+    listChambreParis.push(new Chambre());
+  }
+  let hotelParis = new Hotel("Paris", listChambreParis);
 
-  const listChambre = [];
-  listChambre.push(chambre1);
-  listChambre.push(chambre2);
-  let hotelParis = new Hotel("Paris", listChambre);
+  const listChambreLaval = [];
+  for (let i = 0; i < CHAMBRENUMBER2; i++) {
+    listChambreLaval.push(new Chambre());
+  }
+  let hotelLaval = new Hotel("Laval", listChambreLaval);
 
-  let chambre3 = new Chambre();
+  const listChambreStDenis = [];
+  for (let i = 0; i < CHAMBRENUMBER2; i++) {
+    listChambreLaval.push(new Chambre());
+  }
 
-  const listChambre2 = [];
-  listChambre2.push(chambre3);
+  let hotelSD = new Hotel("Saint-Denis", listChambreStDenis);
+  const listChambreSF = [];
+  for (let i = 0; i < CHAMBRENUMBER; i++) {
+    listChambreLaval.push(new Chambre());
+  }
+  let hotelSF = new Hotel("San Francisco", listChambreSF);
 
-  let hotelBx = new Hotel("Bx", listChambre2);
   hotels.push(hotelParis);
-  hotels.push(hotelBx);
+  hotels.push(hotelLaval);
+  hotels.push(hotelSD);
+  hotels.push(hotelSF);
   return hotels;
 };
 

@@ -8,20 +8,34 @@ const hotel_1 = __importDefault(require("../Class/hotel"));
 const moment_1 = __importDefault(require("moment"));
 const dateSejour_1 = __importDefault(require("../Class/dateSejour"));
 const uuid_1 = require("uuid");
+const CHAMBRENUMBER = 20;
+const CHAMBRENUMBER2 = 50;
 exports.initData = () => {
     const hotels = Array();
-    let chambre1 = new chambre_1.default();
-    let chambre2 = new chambre_1.default();
-    const listChambre = [];
-    listChambre.push(chambre1);
-    listChambre.push(chambre2);
-    let hotelParis = new hotel_1.default("Paris", listChambre);
-    let chambre3 = new chambre_1.default();
-    const listChambre2 = [];
-    listChambre2.push(chambre3);
-    let hotelBx = new hotel_1.default("Bx", listChambre2);
+    const listChambreParis = [];
+    for (let i = 0; i < CHAMBRENUMBER; i++) {
+        listChambreParis.push(new chambre_1.default());
+    }
+    let hotelParis = new hotel_1.default("Paris", listChambreParis);
+    const listChambreLaval = [];
+    for (let i = 0; i < CHAMBRENUMBER2; i++) {
+        listChambreLaval.push(new chambre_1.default());
+    }
+    let hotelLaval = new hotel_1.default("Laval", listChambreLaval);
+    const listChambreStDenis = [];
+    for (let i = 0; i < CHAMBRENUMBER2; i++) {
+        listChambreLaval.push(new chambre_1.default());
+    }
+    let hotelSD = new hotel_1.default("Saint-Denis", listChambreStDenis);
+    const listChambreSF = [];
+    for (let i = 0; i < CHAMBRENUMBER; i++) {
+        listChambreLaval.push(new chambre_1.default());
+    }
+    let hotelSF = new hotel_1.default("San Francisco", listChambreSF);
     hotels.push(hotelParis);
-    hotels.push(hotelBx);
+    hotels.push(hotelLaval);
+    hotels.push(hotelSD);
+    hotels.push(hotelSF);
     return hotels;
 };
 const formatDate = (date) => moment_1.default(date).startOf("day");
