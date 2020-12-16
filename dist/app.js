@@ -20,7 +20,8 @@ app.get("/v1/booking", (req, res) => {
         startDate &&
         endDate &&
         moment_1.default(startDate).isValid() &&
-        moment_1.default(endDate).isValid()) {
+        moment_1.default(endDate).isValid() &&
+        moment_1.default(startDate).isBefore(endDate)) {
         utils_1.isBookableHotel(city, startDate, endDate, hotels)
             .then((result) => res.send(result))
             .catch((error) => {
