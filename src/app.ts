@@ -14,13 +14,26 @@ app.get("/v1/booking", (req, res) => {
   //@ts-ignore
   const endDate: string = req.query.endDate;
 
-  if (
+  if (moment(startDate).startOf("day").isBefore(moment())) {
+    res.send({
+      code: "error",
+      result: "The start date must be greater than the current day",
+    });
+  } else if (
+    moment(startDate)
+      .startOf("day")
+      .isSameOrAfter(moment(endDate).startOf("day"))
+  ) {
+    res.send({
+      code: "error",
+      result: "The end date must be greater than the start date",
+    });
+  } else if (
     city &&
     startDate &&
     endDate &&
     moment(startDate).isValid() &&
-    moment(endDate).isValid() &&
-    moment(startDate).isBefore(endDate)
+    moment(endDate).isValid()
   ) {
     isBookableHotel(city, startDate, endDate, hotels)
       .then((result) => res.send(result))
@@ -28,7 +41,7 @@ app.get("/v1/booking", (req, res) => {
         res.send(error);
       });
   } else {
-    res.send({ code: "error", result: "invalid information" });
+    res.send({ code: "error", result: "Invalid information" });
   }
 });
 

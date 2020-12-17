@@ -94,7 +94,6 @@ const isBookableChambre = (
         const price = `${
           Math.abs(moment(startDate).diff(moment(endDate), "days")) * 54
         }€`;
-        console.log({ price });
         successCallback({
           code: "success",
           result: {

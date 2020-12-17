@@ -60,7 +60,6 @@ const isBookableChambre = (startDate, endDate, listChambre, city) => {
                 const sejour = new dateSejour_1.default(uid, startDate, endDate);
                 chambre.addSejour(sejour);
                 const price = `${Math.abs(moment_1.default(startDate).diff(moment_1.default(endDate), "days")) * 54}€`;
-                console.log({ price });
                 successCallback({
                     code: "success",
                     result: {
