@@ -119,13 +119,15 @@ export const isBookableHotel = (
   listHotel: Array<Hotel>
 ) => {
   return new Promise((success, failed) => {
-    const hotelIndex = listHotel.findIndex((hotel) => hotel.city === city);
+    const hotelIndex = listHotel.findIndex(
+      (hotel) => hotel.city.toUpperCase() === city.toUpperCase()
+    );
     if (hotelIndex > -1) {
       isBookableChambre(
         startDate,
         endDate,
         listHotel[hotelIndex].chambres,
-        city
+        listHotel[hotelIndex].city
       )
         .then((result) => {
           success(result);

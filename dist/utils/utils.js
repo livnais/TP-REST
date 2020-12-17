@@ -79,9 +79,9 @@ const isBookableChambre = (startDate, endDate, listChambre, city) => {
 };
 exports.isBookableHotel = (city, startDate, endDate, listHotel) => {
     return new Promise((success, failed) => {
-        const hotelIndex = listHotel.findIndex((hotel) => hotel.city === city);
+        const hotelIndex = listHotel.findIndex((hotel) => hotel.city.toUpperCase() === city.toUpperCase());
         if (hotelIndex > -1) {
-            isBookableChambre(startDate, endDate, listHotel[hotelIndex].chambres, city)
+            isBookableChambre(startDate, endDate, listHotel[hotelIndex].chambres, listHotel[hotelIndex].city)
                 .then((result) => {
                 success(result);
             })
