@@ -156,8 +156,10 @@ export const isBookableHotel = (
     } else {
       failed({
         code: "error",
-        result: "not ok",
-        description: "Cannot find hotel",
+        result: {
+          message: "not ok",
+          description: "Cannot find hotel",
+        },
       });
     }
   });
@@ -173,7 +175,6 @@ const addSejour = (sejourReser, listHotel: Array<Hotel>) => {
     );
     if (chambre) {
       chambre.addSejour(sejourReser.sejour);
-      console.log("yolo");
     }
   }
 };
