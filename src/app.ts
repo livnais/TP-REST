@@ -32,6 +32,10 @@ app.get("/v1/booking", (req, res) => {
   }
 });
 
+app.get("/v1/payment", (req, res) => {
+  res.send({ hotels });
+});
+
 app.listen(PORT, () => {
   hotels = initData();
   return console.log(`server is listening on ${PORT}`);

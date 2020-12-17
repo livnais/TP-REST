@@ -24,12 +24,12 @@ exports.initData = () => {
     let hotelLaval = new hotel_1.default("Laval", listChambreLaval);
     const listChambreStDenis = [];
     for (let i = 0; i < CHAMBRENUMBER2; i++) {
-        listChambreLaval.push(new chambre_1.default());
+        listChambreStDenis.push(new chambre_1.default());
     }
     let hotelSD = new hotel_1.default("Saint-Denis", listChambreStDenis);
     const listChambreSF = [];
     for (let i = 0; i < CHAMBRENUMBER; i++) {
-        listChambreLaval.push(new chambre_1.default());
+        listChambreSF.push(new chambre_1.default());
     }
     let hotelSF = new hotel_1.default("San Francisco", listChambreSF);
     hotels.push(hotelParis);

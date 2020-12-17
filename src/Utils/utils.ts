@@ -23,13 +23,13 @@ export const initData = () => {
 
   const listChambreStDenis = [];
   for (let i = 0; i < CHAMBRENUMBER2; i++) {
-    listChambreLaval.push(new Chambre());
+    listChambreStDenis.push(new Chambre());
   }
-
   let hotelSD = new Hotel("Saint-Denis", listChambreStDenis);
+
   const listChambreSF = [];
   for (let i = 0; i < CHAMBRENUMBER; i++) {
-    listChambreLaval.push(new Chambre());
+    listChambreSF.push(new Chambre());
   }
   let hotelSF = new Hotel("San Francisco", listChambreSF);
 

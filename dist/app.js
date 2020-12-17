@@ -32,6 +32,9 @@ app.get("/v1/booking", (req, res) => {
         res.send({ code: "error", result: "invalid information" });
     }
 });
+app.get("/v1/payment", (req, res) => {
+    res.send({ hotels });
+});
 app.listen(PORT, () => {
     hotels = utils_1.initData();
     return console.log(`server is listening on ${PORT}`);
