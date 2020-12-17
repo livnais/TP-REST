@@ -12,6 +12,15 @@ const PORT = process.env.PORT || 8080;
 let hotels = Array<Hotel>();
 moment.locale("fr");
 
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
 app.get("/v1/booking", (req, res) => {
   const { city } = req.query;
   //@ts-ignore
