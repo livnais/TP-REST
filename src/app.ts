@@ -22,7 +22,10 @@ app.get("/v1/booking", (req, res) => {
   if (moment(startDate).startOf("day").isBefore(moment())) {
     res.send({
       code: "error",
-      result: "The start date must be greater than the current day",
+      result: {
+        message: "not ok",
+        description: "The start date must be greater than the current day",
+      },
     });
   } else if (
     moment(startDate)
@@ -31,7 +34,10 @@ app.get("/v1/booking", (req, res) => {
   ) {
     res.send({
       code: "error",
-      result: "The end date must be greater than the start date",
+      result: {
+        message: "not ok",
+        description: "The end date must be greater than the start date",
+      },
     });
   } else if (
     city &&
@@ -46,7 +52,10 @@ app.get("/v1/booking", (req, res) => {
         res.send(error);
       });
   } else {
-    res.send({ code: "error", result: { message: "Invalid information" } });
+    res.send({
+      code: "error",
+      result: { message: "not ok", description: "Invalid information" },
+    });
   }
 });
 
