@@ -106,8 +106,10 @@ exports.isBookableHotel = (city, startDate, endDate, listHotel) => {
         else {
             failed({
                 code: "error",
-                result: "not ok",
-                description: "Cannot find hotel",
+                result: {
+                    message: "not ok",
+                    description: "Cannot find hotel",
+                },
             });
         }
     });
@@ -118,7 +120,6 @@ const addSejour = (sejourReser, listHotel) => {
         const chambre = listHotel[hotelIndex].chambres.find((ch) => ch.id === sejourReser.chambreUid);
         if (chambre) {
             chambre.addSejour(sejourReser.sejour);
-            console.log("yolo");
         }
     }
 };
@@ -143,7 +144,7 @@ exports.confirmBookingPayment = (uid, listHotel) => {
             failed({
                 code: "error",
                 result: {
-                    messege: "not ok",
+                    message: "not ok",
                     description: "We are sorry, we could not confirm your reservation",
                 },
             });
