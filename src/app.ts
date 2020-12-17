@@ -7,8 +7,6 @@ const PORT = process.env.PORT || 8080;
 let hotels = Array<Hotel>();
 moment.locale("fr");
 
-app.use(express.json());
-
 app.get("/v1/booking", (req, res) => {
   const { city } = req.query;
   //@ts-ignore

@@ -1,7 +1,7 @@
 import Chambre from "../class/chambre";
-import Hotel from "../Class/hotel";
-import moment from "moment";
-import DateSejour from "../Class/dateSejour";
+import Hotel from "../class/hotel";
+import moment, { Moment } from "moment";
+import DateSejour from "../class/dateSejour";
 import { v4 as uuidv4 } from "uuid";
 
 const CHAMBRENUMBER = 20;
@@ -76,7 +76,7 @@ const isFreeRoom = (startDate, endDate, itemsMonth: Array<DateSejour>) => {
   return true;
 };
 
-export const isBookableChambre = (
+const isBookableChambre = (
   startDate,
   endDate,
   listChambre: Array<Chambre>,
@@ -91,9 +91,14 @@ export const isBookableChambre = (
 
         const sejour = new DateSejour(uid, startDate, endDate);
         chambre.addSejour(sejour);
+        const price = `${
+          Math.abs(moment(startDate).diff(moment(endDate), "days")) * 54
+        }€`;
+        console.log({ price });
         successCallback({
           code: "success",
           result: {
+            price,
             sejourUid: uid,
             ville: city,
             chambreUid: chambre.id,
