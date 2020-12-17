@@ -198,7 +198,7 @@ export const confirmBookingPayment = (uid, listHotel: Array<Hotel>) => {
       failed({
         code: "error",
         result: {
-          messege: "not ok",
+          message: "not ok",
           description: "We are sorry, we could not confirm your reservation",
         },
       });
