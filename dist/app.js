@@ -12,7 +12,8 @@ let hotels = Array();
 moment_1.default.locale("fr");
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.setHeader("Access-Control-Request-Method", "GET");
+    res.setHeader("Access-Control-Request-Headers", "Content-Type, Accept");
     next();
 });
 app.get("/v1/booking", (req, res) => {
