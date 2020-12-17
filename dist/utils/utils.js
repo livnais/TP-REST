@@ -78,7 +78,12 @@ const isBookableChambre = (startDate, endDate, listChambre, city, priceChambre) 
                     sejourDisponibleArray = Array.from(sejourDisponible.values());
                     successCallback({
                         code: "success",
-                        result: { message: "ok", uidSejour: uid, price },
+                        result: {
+                            message: "ok",
+                            description: "Room is available",
+                            uidSejour: uid,
+                            price,
+                        },
                     });
                     break;
                 }
