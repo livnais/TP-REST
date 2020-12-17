@@ -4,10 +4,12 @@ export default class Hotel {
   id: string;
   city: string;
   chambres: Array<Chambre>;
+  price: number;
 
-  constructor(city, chambres: Array<Chambre>) {
+  constructor(city, price: number, chambres: Array<Chambre>) {
     this.id = uuidv4();
     this.city = city;
     this.chambres = chambres;
+    this.price = price;
   }
 }

@@ -16,7 +16,6 @@ app.get("/v1/booking", (req, res) => {
     const startDate = req.query.startDate;
     //@ts-ignore
     const endDate = req.query.endDate;
-    console.log(moment_1.default(), startDate);
     if (moment_1.default(startDate).startOf("day").isBefore(moment_1.default())) {
         res.send({
             code: "error",
@@ -43,14 +42,23 @@ app.get("/v1/booking", (req, res) => {
         });
     }
     else {
-        res.send({ code: "error", result: "Invalid information" });
+        res.send({ code: "error", result: { message: "Invalid information" } });
     }
 });
 app.get("/v1/payment", (req, res) => {
-    res.send({ hotels });
+    const { uidSejour } = req.query;
+    if (uidSejour) {
+        utils_1.confirmBookingPayment(uidSejour, hotels)
+            .then((result) => res.send(result))
+            .catch((error) => res.send(error));
+    }
+    else {
+        res.send({ code: "error", result: { message: "Invalid information" } });
+    }
 });
 app.listen(PORT, () => {
     hotels = utils_1.initData();
+    utils_1.cleanSejourDisponible();
     return console.log(`server is listening on ${PORT}`);
 });
 //# sourceMappingURL=app.js.map

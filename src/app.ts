@@ -1,6 +1,11 @@
 import express from "express";
 import Hotel from "./class/hotel";
-import { isBookableHotel, initData } from "./utils/utils";
+import {
+  isBookableHotel,
+  initData,
+  cleanSejourDisponible,
+  confirmBookingPayment,
+} from "./utils/utils";
 import moment from "moment";
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -41,15 +46,23 @@ app.get("/v1/booking", (req, res) => {
         res.send(error);
       });
   } else {
-    res.send({ code: "error", result: "Invalid information" });
+    res.send({ code: "error", result: { message: "Invalid information" } });
   }
 });
 
 app.get("/v1/payment", (req, res) => {
-  res.send({ hotels });
+  const { uidSejour } = req.query;
+  if (uidSejour) {
+    confirmBookingPayment(uidSejour, hotels)
+      .then((result) => res.send(result))
+      .catch((error) => res.send(error));
+  } else {
+    res.send({ code: "error", result: { message: "Invalid information" } });
+  }
 });
 
 app.listen(PORT, () => {
   hotels = initData();
+  cleanSejourDisponible();
   return console.log(`server is listening on ${PORT}`);
 });

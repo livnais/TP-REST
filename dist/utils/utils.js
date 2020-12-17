@@ -10,28 +10,30 @@ const dateSejour_1 = __importDefault(require("../class/dateSejour"));
 const uuid_1 = require("uuid");
 const CHAMBRENUMBER = 20;
 const CHAMBRENUMBER2 = 50;
+const sejourDisponible = new Map();
+let sejourDisponibleArray = [];
 exports.initData = () => {
     const hotels = Array();
     const listChambreParis = [];
     for (let i = 0; i < CHAMBRENUMBER; i++) {
         listChambreParis.push(new chambre_1.default());
     }
-    let hotelParis = new hotel_1.default("Paris", listChambreParis);
+    let hotelParis = new hotel_1.default("Paris", 54, listChambreParis);
     const listChambreLaval = [];
     for (let i = 0; i < CHAMBRENUMBER2; i++) {
         listChambreLaval.push(new chambre_1.default());
     }
-    let hotelLaval = new hotel_1.default("Laval", listChambreLaval);
+    let hotelLaval = new hotel_1.default("Laval", 23, listChambreLaval);
     const listChambreStDenis = [];
     for (let i = 0; i < CHAMBRENUMBER2; i++) {
         listChambreStDenis.push(new chambre_1.default());
     }
-    let hotelSD = new hotel_1.default("Saint-Denis", listChambreStDenis);
+    let hotelSD = new hotel_1.default("Saint-Denis", 10, listChambreStDenis);
     const listChambreSF = [];
     for (let i = 0; i < CHAMBRENUMBER; i++) {
         listChambreSF.push(new chambre_1.default());
     }
-    let hotelSF = new hotel_1.default("San Francisco", listChambreSF);
+    let hotelSF = new hotel_1.default("San Francisco", 67, listChambreSF);
     hotels.push(hotelParis);
     hotels.push(hotelLaval);
     hotels.push(hotelSD);
@@ -39,48 +41,61 @@ exports.initData = () => {
     return hotels;
 };
 const formatDate = (date) => moment_1.default(date).startOf("day");
-const isFreeRoom = (startDate, endDate, itemsMonth) => {
-    for (let i = 0; i < itemsMonth.length; i++) {
-        if (formatDate(startDate).isBetween(formatDate(itemsMonth[i].debut), formatDate(itemsMonth[i].fin), "day", "[]") ||
-            formatDate(endDate).isBetween(formatDate(itemsMonth[i].debut), formatDate(itemsMonth[i].fin), "day", "[]") ||
-            formatDate(itemsMonth[i].debut).isBetween(formatDate(startDate), formatDate(endDate), "day", "[]") ||
-            formatDate(itemsMonth[i].fin).isBetween(formatDate(startDate), formatDate(endDate), "day", "[]")) {
+const isFreeRoom = (startDate, endDate, itemReservation, chambreId) => {
+    for (let i = 0; i < itemReservation.length; i++) {
+        if (formatDate(startDate).isBetween(formatDate(itemReservation[i].debut), formatDate(itemReservation[i].fin), "day", "[]") ||
+            formatDate(endDate).isBetween(formatDate(itemReservation[i].debut), formatDate(itemReservation[i].fin), "day", "[]") ||
+            formatDate(itemReservation[i].debut).isBetween(formatDate(startDate), formatDate(endDate), "day", "[]") ||
+            formatDate(itemReservation[i].fin).isBetween(formatDate(startDate), formatDate(endDate), "day", "[]")) {
+            if (itemReservation[i].chambreUid &&
+                chambreId !== itemReservation[i].chambreUid) {
+                return true;
+            }
             return false;
         }
     }
     return true;
 };
-const isBookableChambre = (startDate, endDate, listChambre, city) => {
+const isBookableChambre = (startDate, endDate, listChambre, city, priceChambre) => {
     return new Promise((successCallback, failureCallback) => {
         for (let i = 0; i < listChambre.length; i++) {
             const chambre = listChambre[i];
             const chambreReservation = chambre.reservation;
             if (isFreeRoom(startDate, endDate, chambreReservation)) {
-                const uid = uuid_1.v4();
-                const sejour = new dateSejour_1.default(uid, startDate, endDate);
-                chambre.addSejour(sejour);
-                const price = `${Math.abs(moment_1.default(startDate).diff(moment_1.default(endDate), "days")) * 54}€`;
-                successCallback({
-                    code: "success",
-                    result: {
+                if (isFreeRoom(startDate, endDate, sejourDisponibleArray, chambre.id)) {
+                    const uid = uuid_1.v4();
+                    const sejour = new dateSejour_1.default(uid, startDate, endDate);
+                    const price = `${Math.abs(moment_1.default(startDate).diff(moment_1.default(endDate), "days")) *
+                        priceChambre}€`;
+                    sejourDisponible.set(uid, {
+                        updateAt: moment_1.default(),
                         price,
                         sejourUid: uid,
                         ville: city,
                         chambreUid: chambre.id,
                         sejour,
-                    },
-                });
-                break;
+                    });
+                    sejourDisponibleArray = Array.from(sejourDisponible.values());
+                    successCallback({
+                        code: "success",
+                        result: { message: "ok", uidSejour: uid },
+                    });
+                    break;
+                }
             }
         }
-        failureCallback({ code: "error", result: "Unavailable data" });
+        failureCallback({
+            code: "error",
+            result: { message: "not ok", description: "Unavailable data" },
+        });
     });
 };
 exports.isBookableHotel = (city, startDate, endDate, listHotel) => {
     return new Promise((success, failed) => {
         const hotelIndex = listHotel.findIndex((hotel) => hotel.city.toUpperCase() === city.toUpperCase());
         if (hotelIndex > -1) {
-            isBookableChambre(startDate, endDate, listHotel[hotelIndex].chambres, listHotel[hotelIndex].city)
+            const { chambres, city, price } = listHotel[hotelIndex];
+            isBookableChambre(startDate, endDate, chambres, city, price)
                 .then((result) => {
                 success(result);
             })
@@ -89,8 +104,59 @@ exports.isBookableHotel = (city, startDate, endDate, listHotel) => {
             });
         }
         else {
-            failed({ code: "error", result: "Cannot find hotel" });
+            failed({
+                code: "error",
+                result: "not ok",
+                description: "Cannot find hotel",
+            });
         }
     });
+};
+const addSejour = (sejourReser, listHotel) => {
+    const hotelIndex = listHotel.findIndex((hotel) => hotel.city.toUpperCase() === sejourReser.ville.toUpperCase());
+    if (hotelIndex >= 0) {
+        const chambre = listHotel[hotelIndex].chambres.find((ch) => ch.id === sejourReser.chambreUid);
+        if (chambre) {
+            chambre.addSejour(sejourReser.sejour);
+            console.log("yolo");
+        }
+    }
+};
+exports.confirmBookingPayment = (uid, listHotel) => {
+    return new Promise((success, failed) => {
+        const sejourDispo = sejourDisponible.get(uid);
+        if (sejourDispo) {
+            addSejour(sejourDispo, listHotel);
+            sejourDisponible.delete(uid);
+            success({
+                code: "success",
+                result: {
+                    message: "ok",
+                    description: `Congratulations on your well booked hotel in ${sejourDispo.ville}`,
+                    sejourUid: sejourDispo.sejourUid,
+                    chambreId: sejourDispo.chambreUid,
+                },
+            });
+        }
+        else {
+            failed({
+                code: "error",
+                result: {
+                    messege: "not ok",
+                    description: "We are sorry, we could not confirm your reservation",
+                },
+            });
+        }
+    });
+};
+exports.cleanSejourDisponible = () => {
+    setInterval(() => {
+        for (const [key, value] of sejourDisponible.entries()) {
+            if (Math.abs(moment_1.default(value.updateAt).diff(moment_1.default(), "minutes")) >= 5) {
+                sejourDisponible.delete(key);
+            }
+        }
+        sejourDisponibleArray = Array.from(sejourDisponible.values());
+    }, 30000);
 };
 //# sourceMappingURL=utils.js.map
